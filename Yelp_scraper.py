@@ -163,7 +163,7 @@ class yelp_store_page():
     
     def get_name(self):
         try:
-            return self.driver.find_element_by_css_selector("h1[class ^= ' heading--h1__373c0__dvYgw']").text
+            return self.driver.find_element_by_css_selector("h1[class ^= 'css-11q1g5y']").text
         except:
             return False
         
@@ -182,13 +182,13 @@ class yelp_store_page():
         try:
             try:
                 header = self.driver.find_element_by_css_selector("div[class ^= ' photoHeader__373c0__YdvQE']")
-                for tag in header.find_elements_by_css_selector("span[class ^= ' text__373c0__2Kxyz']"):
+                for tag in header.find_elements_by_css_selector("span[class ^= ' css-bq71j2']"):
                     if 'review' in tag.text.lower():
                         return tag.text
 
             except:
                 header = self.driver.find_elements_by_css_selector("div[class = ' arrange__373c0__2C9bH gutter-2__373c0__1DiLQ border-color--default__373c0__3-ifU']")[1]
-                for tag in header.find_elements_by_css_selector("span[class ^= ' text__373c0__2Kxyz']"):
+                for tag in header.find_elements_by_css_selector("span[class ^= ' css-1h1j0y3']"):
                     if 'review' in tag.text.lower():
                         return tag.text
 
@@ -200,13 +200,13 @@ class yelp_store_page():
         try:
             try:
                 header = self.driver.find_element_by_css_selector("div[class ^= ' photoHeader__373c0__YdvQE']")
-                for tag in header.find_elements_by_css_selector("span[class ^= ' text__373c0__2Kxyz']"):
+                for tag in header.find_elements_by_css_selector("span[class ^= ' css-1xxismk']"):
                     if '$' in tag.text.lower():
                         return tag.text
 
             except:
                 header = self.driver.find_elements_by_css_selector("div[class = ' arrange__373c0__2C9bH gutter-2__373c0__1DiLQ border-color--default__373c0__3-ifU']")[1]
-                for tag in header.find_elements_by_css_selector("span[class ^= ' text__373c0__2Kxyz']"):
+                for tag in header.find_elements_by_css_selector("span[class ^= ' css-1xxismk']"):
                     if '$' in tag.text.lower():
                         return tag.text
 
@@ -220,13 +220,13 @@ class yelp_store_page():
         try:
             try:
                 header = self.driver.find_element_by_css_selector("div[class ^= ' photoHeader__373c0__YdvQE']")
-                for tag in header.find_elements_by_css_selector("a[class ^= ' link__373c0__1G70M link-color--inherit__373c0__3dzpk link-size--inherit__373c0__1VFlE']"):
+                for tag in header.find_elements_by_css_selector("a[class ^= 'css-166la90']"):
                     if 'unclaimed' in tag.text.lower():
                         continue
                     attribute.append(tag.text)
             except:
                 header = self.driver.find_elements_by_css_selector("div[class = ' arrange__373c0__2C9bH gutter-2__373c0__1DiLQ border-color--default__373c0__3-ifU']")[1]
-                for tag in header.find_elements_by_css_selector("a[class ^= ' link__373c0__1G70M link-color--inherit__373c0__3dzpk link-size--inherit__373c0__1VFlE']"):
+                for tag in header.find_elements_by_css_selector("a[class ^= 'css-166la90']"):
                     if 'unclaimed' in tag.text.lower():
                         continue
                     attribute.append(tag.text)
@@ -238,13 +238,13 @@ class yelp_store_page():
         try:
             try:
                 header = self.driver.find_element_by_css_selector("div[class ^= ' photoHeader__373c0__YdvQE']")
-                for tag in header.find_elements_by_css_selector("span[class ^= ' text__373c0__2Kxyz']"):
+                for tag in header.find_elements_by_css_selector("span[class ^= 'claim-text--light__373c0__1ip1u']"):
                     if tag.text.lower() == 'claimed':
                         return True
                 return False
             except:
                 header = self.driver.find_elements_by_css_selector("div[class = ' arrange__373c0__2C9bH gutter-2__373c0__1DiLQ border-color--default__373c0__3-ifU']")[1]
-                for tag in header.find_elements_by_css_selector("span[class ^= ' text__373c0__2Kxyz']"):
+                for tag in header.find_elements_by_css_selector("span[class ^= 'claim-text--dark__373c0__xRoSM']"):
                     if tag.text.lower() == 'claimed':
                         return True
                 return False
