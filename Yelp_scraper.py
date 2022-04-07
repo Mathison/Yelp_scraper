@@ -35,7 +35,10 @@ class yelp_search_page():
             
     def _input_name(self,store_name):
         try:
-            name_input = self.driver.find_element_by_css_selector("input[id ^= 'find_desc']")
+            try:
+                name_input = self.driver.find_element_by_css_selector("input[id = 'search_description']")
+            except:
+                name_input = self.driver.find_element_by_css_selector("input[id = 'find_desc']")
             name_input.clear()
             name_input.send_keys(store_name)
         except:
@@ -43,7 +46,10 @@ class yelp_search_page():
             
     def _input_location(self,location):
         try:
-            loc_input = self.driver.find_element_by_css_selector("input[id ^= 'dropperText_Mast']")
+            try:
+                loc_input = self.driver.find_element_by_css_selector("input[id = 'search_location']")
+            except:
+                loc_input = self.driver.find_element_by_css_selector("input[id = 'dropperText_Mast']")
             loc_input.clear()
             loc_input.send_keys(location)
         except:
@@ -51,7 +57,10 @@ class yelp_search_page():
             
     def _click_search_button(self):
         try:
-            search_button = self.driver.find_element_by_css_selector("button[id ^= 'header-search-submit']")
+            try:
+                search_button = self.driver.find_element_by_css_selector("button[data-testid = 'suggest-submit']")
+            except:
+                search_button = self.driver.find_element_by_css_selector("button[id = 'header-search-submit']")
             search_button.click()
         except:
             print("Can't click search button")
@@ -75,12 +84,23 @@ class yelp_search_page():
             try:
                 store_list += self._get_page_stores()
                 self._move_to_next_page()
+                time.sleep(3)
             except:
                 break
-        return store_list
+                
+        duplicate_link = []
+        unique_store = []
+        for data in store_list:
+            link = data['link'].split('?')[0]
+            if link in duplicate_link:
+                continue
+            duplicate_link.append(link)
+            unique_store.append(data)
+        return unique_store
     
     def _move_to_next_page(self):
         self.driver.find_element_by_css_selector("a[class ^= 'next-link']").click()
+        
     
     def _has_next_page(self):
         try:
@@ -116,7 +136,7 @@ class yelp_search_page():
     
     def _get_store_address(self,token):
         try:
-            return token.find_element_by_css_selector("address").text
+            return token.find_element_by_css_selector("span[class = ' css-chan6m']").text
         except:
             return False
     
@@ -180,9 +200,9 @@ class yelp_store_page():
                 header = self.driver.find_element_by_css_selector("div[class ^= ' photo-header-content__09f24__q7rNO']")
                 return header.find_element_by_css_selector("div[class ^= ' i-stars__09f24__M1AR7']").get_attribute("aria-label")
             except:
-                header = self.driver.find_elements_by_css_selector("div[class = ' arrange__373c0__2C9bH gutter-2__373c0__1DiLQ border-color--default__373c0__3-ifU']")[1]
-                return header.find_element_by_css_selector("div[class ^= ' i-stars__373c0__1BRrc']").get_attribute("aria-label")
-        except:
+                return self.driver.find_element_by_css_selector("div[class ^= ' i-stars__09f24__M1AR7']").get_attribute("aria-label")
+        except Exception as e:
+            print("rate",e)
             return ''
         
     def get_num_reviewer(self):
@@ -194,12 +214,12 @@ class yelp_store_page():
                         return tag.text
 
             except:
-                header = self.driver.find_elements_by_css_selector("div[class = ' arrange__373c0__2C9bH gutter-2__373c0__1DiLQ border-color--default__373c0__3-ifU']")[1]
-                for tag in header.find_elements_by_css_selector("span[class ^= ' css-1h1j0y3']"):
-                    if 'review' in tag.text.lower():
-                        return tag.text
+                tag = self.driver.find_element_by_css_selector("span[class ^= ' css-1p9ibgf']")
+                if 'review' in tag.text.lower():
+                    return tag.text
 
-        except:
+        except Exception as e:
+            print("num reviewer",e)
             return ''
         return ''
     
@@ -212,12 +232,9 @@ class yelp_store_page():
                         return tag.text
 
             except:
-                header = self.driver.find_elements_by_css_selector("div[class = ' arrange__373c0__2C9bH gutter-2__373c0__1DiLQ border-color--default__373c0__3-ifU']")[1]
-                for tag in header.find_elements_by_css_selector("span[class ^= ' css-1xxismk']"):
-                    if '$' in tag.text.lower():
-                        return tag.text
-
-        except:
+                return self.driver.find_element_by_css_selector("span[class ^= ' css-1ir4e44']").text.lower()
+        except Exception as e:
+            print("price",e)
             return ''
         return ''
     
@@ -232,12 +249,13 @@ class yelp_store_page():
                         continue
                     attribute.append(tag.text)
             except:
-                header = self.driver.find_elements_by_css_selector("div[class = ' arrange__373c0__2C9bH gutter-2__373c0__1DiLQ border-color--default__373c0__3-ifU']")[1]
-                for tag in header.find_elements_by_css_selector("a[class ^= 'css-166la90']"):
+                header = self.driver.find_elements_by_css_selector("span[class ^= ' css-1p9ibgf'] > a[class ^='css-1m051bw']")
+                for tag in header:
                     if 'unclaimed' in tag.text.lower():
                         continue
                     attribute.append(tag.text)
-        except:
+        except Exception as e:
+            print("attribute",e)
             return attribute
         return attribute     
     
@@ -250,12 +268,13 @@ class yelp_store_page():
                         return True
                 return False
             except:
-                header = self.driver.find_elements_by_css_selector("div[class = ' arrange__373c0__2C9bH gutter-2__373c0__1DiLQ border-color--default__373c0__3-ifU']")[1]
-                for tag in header.find_elements_by_css_selector("span[class ^= 'claim-text--dark__373c0__xRoSM']"):
+                
+                for tag in self.driver.find_elements_by_css_selector("span[class ^= 'claim-text--dark__09f24__Hpw9d']"):
                     if tag.text.lower() == 'claimed':
                         return True
                 return False
-        except:
+        except Exception as e:
+            print("claimed",e)
             return False
         
     def get_geo(self):
@@ -263,14 +282,16 @@ class yelp_store_page():
         try:
             map_link_content = self.driver.find_element_by_css_selector("div[class ^= ' container__09f24__fZQnf'] > img").get_attribute("src").split('&')
             for content in map_link_content:
-                if 'center' in content.lower():
-                    content = content.replace("center=","")
-                    content = content.split("%2C")
-                    coordinates["latitude"] = content[0]
-                    coordinates["longitude"] = content[1]
+                if 'markers=' in content.lower():
+                    content = content.replace("2C","")
+                    content = content.replace("7C","")
+                    content = content.split('%')
+                    coordinates["latitude"] = content[-1]
+                    coordinates["longitude"] = content[-2]
                     return coordinates
             return coordinates
-        except:
+        except Exception as e:
+            print("geo",e)
             return coordinates
         
     def get_address(self):
